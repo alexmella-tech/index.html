@@ -1,50 +1,125 @@
 <!DOCTYPE html>
 <html lang="no">
 <head>
-  <meta charset="UTF-8">
-  <title>XOR-kryptering – demo</title>
-  <style>
-    body { font-family: Arial, sans-serif; max-width: 600px; margin: 2rem auto; }
-    input { width: 100%; padding: 0.4rem; font-family: monospace; }
-    label { font-weight: bold; margin-top: 1rem; display: block; }
-    .result { margin-top: 1rem; padding: 0.5rem; background: #f3f3f3; font-family: monospace; }
-  </style>
+<meta charset="UTF-8">
+<title>XOR-kryptering – Battleship-demo</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        max-width: 700px;
+        margin: 2rem auto;
+        padding: 1rem;
+        background: #0f0f0f;
+        color: #e0e0e0;
+    }
+    h1 { color: #00ff9d; }
+    select, input, button {
+        width: 100%;
+        padding: 0.6rem;
+        margin-top: 0.4rem;
+        font-size: 1rem;
+        border-radius: 6px;
+        border: none;
+    }
+    button {
+        background: #00ff9d;
+        color: #000;
+        font-weight: bold;
+        cursor: pointer;
+        margin-top: 1rem;
+    }
+    .bitbox {
+        display: flex;
+        gap: 6px;
+        margin-top: 1rem;
+        font-family: monospace;
+        font-size: 1.3rem;
+    }
+    .bit {
+        width: 28px;
+        height: 28px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 4px;
+        background: #1f1f1f;
+        border: 1px solid #333;
+        transition: background 0.3s;
+    }
+    .bit.flash {
+        background: #00ff9d;
+        color: #000;
+    }
+</style>
 </head>
 <body>
-  <h1>XOR-kryptering – Battleship-demo</h1>
-  <p>Velg nøkkel og koordinat (6-bit binær), så ser du kryptert koordinat.</p>
 
-  <label for="key">Krypteringsnøkkel (6 bit, f.eks. 101010):</label>
-  <input id="key" value="101010">
+<h1>XOR-kryptering – Demo</h1>
+<p>Velg koordinat og nøkkel for å se hvordan XOR-kryptering fungerer i spillet.</p>
 
-  <label for="coord">Kartkoordinat (6 bit, f.eks. 001010 for B2):</label>
-  <input id="coord" value="001010">
+<label>Koordinat (A1–H8):</label>
+<select id="coordSelect"></select>
 
-  <button onclick="doXor()">Krypter</button>
+<label>Krypteringsnøkkel (6 bit):</label>
+<select id="keySelect">
+    <option>101010</option>
+    <option>110001</option>
+    <option>110100</option>
+    <option>101111</option>
+    <option>100011</option>
+    <option>111100</option>
+    <option>100101</option>
+    <option>111011</option>
+</select>
 
-  <div class="result" id="out"></div>
+<button onclick="runXor()">Krypter</button>
 
-  <script>
-    function xorBits(a, b) {
-      if (a.length !== b.length) return "Feil: ulik lengde";
-      let res = "";
-      for (let i = 0; i < a.length; i++) {
-        const bitA = a[i] === '1' ? 1 : 0;
-        const bitB = b[i] === '1' ? 1 : 0;
-        res += (bitA ^ bitB).toString();
-      }
-      return res;
+<h2>Bit-for-bit XOR</h2>
+<div id="bitA" class="bitbox"></div>
+<div id="bitB" class="bitbox"></div>
+<div id="bitR" class="bitbox"></div>
+
+<script>
+    // Generer koordinater A1–H8
+    const coordSelect = document.getElementById("coordSelect");
+    const letters = "ABCDEFGH";
+    for (let l of letters) {
+        for (let n = 1; n <= 8; n++) {
+            const bin = (letters.indexOf(l) << 3 | (n - 1)).toString(2).padStart(6, "0");
+            coordSelect.innerHTML += `<option value="${bin}">${l}${n} (${bin})</option>`;
+        }
     }
 
-    function doXor() {
-      const key = document.getElementById('key').value.trim();
-      const coord = document.getElementById('coord').value.trim();
-      const enc = xorBits(key, coord);
-      document.getElementById('out').textContent =
-        "Nøkkel:   " + key   + "\n" +
-        "Koordinat:" + coord + "\n" +
-        "XOR:      " + enc;
+    function renderBits(container, bits) {
+        container.innerHTML = "";
+        for (let b of bits) {
+            const div = document.createElement("div");
+            div.className = "bit";
+            div.textContent = b;
+            container.appendChild(div);
+        }
     }
-  </script>
+
+    function flashBits(bits) {
+        bits.forEach((bit, i) => {
+            setTimeout(() => bit.classList.add("flash"), i * 150);
+            setTimeout(() => bit.classList.remove("flash"), i * 150 + 300);
+        });
+    }
+
+    function runXor() {
+        const coord = coordSelect.value;
+        const key = document.getElementById("keySelect").value;
+
+        const result = [...coord].map((c, i) => (parseInt(c) ^ parseInt(key[i]))).join("");
+
+        renderBits(document.getElementById("bitA"), coord);
+        renderBits(document.getElementById("bitB"), key);
+        renderBits(document.getElementById("bitR"), result);
+
+        flashBits([...document.querySelectorAll("#bitR .bit")]);
+    }
+</script>
+
 </body>
 </html>
