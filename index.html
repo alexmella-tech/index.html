@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8">
+  <title>XOR-kryptering – demo</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 600px; margin: 2rem auto; }
+    input { width: 100%; padding: 0.4rem; font-family: monospace; }
+    label { font-weight: bold; margin-top: 1rem; display: block; }
+    .result { margin-top: 1rem; padding: 0.5rem; background: #f3f3f3; font-family: monospace; }
+  </style>
+</head>
+<body>
+  <h1>XOR-kryptering – Battleship-demo</h1>
+  <p>Velg nøkkel og koordinat (6-bit binær), så ser du kryptert koordinat.</p>
+
+  <label for="key">Krypteringsnøkkel (6 bit, f.eks. 101010):</label>
+  <input id="key" value="101010">
+
+  <label for="coord">Kartkoordinat (6 bit, f.eks. 001010 for B2):</label>
+  <input id="coord" value="001010">
+
+  <button onclick="doXor()">Krypter</button>
+
+  <div class="result" id="out"></div>
+
+  <script>
+    function xorBits(a, b) {
+      if (a.length !== b.length) return "Feil: ulik lengde";
+      let res = "";
+      for (let i = 0; i < a.length; i++) {
+        const bitA = a[i] === '1' ? 1 : 0;
+        const bitB = b[i] === '1' ? 1 : 0;
+        res += (bitA ^ bitB).toString();
+      }
+      return res;
+    }
+
+    function doXor() {
+      const key = document.getElementById('key').value.trim();
+      const coord = document.getElementById('coord').value.trim();
+      const enc = xorBits(key, coord);
+      document.getElementById('out').textContent =
+        "Nøkkel:   " + key   + "\n" +
+        "Koordinat:" + coord + "\n" +
+        "XOR:      " + enc;
+    }
+  </script>
+</body>
+</html>
