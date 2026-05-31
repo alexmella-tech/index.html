@@ -60,16 +60,16 @@
 <label>Koordinat (A1–H8):</label>
 <select id="coordSelect"></select>
 
-<label>Krypteringsnøkkel (6 bit):</label>
+<label>Krypteringsnøkkel (1–8):</label>
 <select id="keySelect">
-    <option>101010</option>
-    <option>110001</option>
-    <option>110100</option>
-    <option>101111</option>
-    <option>100011</option>
-    <option>111100</option>
-    <option>100101</option>
-    <option>111011</option>
+    <option value="101010">1 – 101010</option> <!-- Nøkkelnummer 000, desimal 1 -->
+    <option value="011001">2 – 011001</option> <!-- Nøkkelnummer 001, desimal 2 -->
+    <option value="110100">3 – 110100</option> <!-- Nøkkelnummer 010, desimal 3 -->
+    <option value="000111">4 – 000111</option> <!-- Nøkkelnummer 011, desimal 4 -->
+    <option value="111000">5 – 111000</option> <!-- Nøkkelnummer 100, desimal 5 -->
+    <option value="010101">6 – 010101</option> <!-- Nøkkelnummer 101, desimal 6 -->
+    <option value="100110">7 – 100110</option> <!-- Nøkkelnummer 110, desimal 7 -->
+    <option value="001011">8 – 001011</option> <!-- Nøkkelnummer 111, desimal 8 -->
 </select>
 
 <button onclick="runXor()">Krypter</button>
